@@ -1,0 +1,1 @@
+web: gunicorn moodmate_backend.wsgi --log-file -

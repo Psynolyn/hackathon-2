@@ -1,0 +1,284 @@
+{
+  "info": {
+    "name": "MoodMate API",
+    "description": "AI-powered mood tracking and wellness platform API",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"testpass123\",\n  \"password_confirm\": \"testpass123\",\n  \"first_name\": \"Test\",\n  \"last_name\": \"User\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register", ""]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('access_token', response.access);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"demo\",\n  \"password\": \"password\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/me/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "me", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mood Logs",
+      "item": [
+        {
+          "name": "List Mood Logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/moods/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "moods", ""]
+            }
+          }
+        },
+        {
+          "name": "Create Mood Log",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mood\": \"stressed\",\n  \"intensity\": 7,\n  \"note\": \"Big presentation tomorrow\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/moods/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "moods", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Mood Log",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/moods/{{mood_log_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "moods", "{{mood_log_id}}", ""]
+            }
+          }
+        },
+        {
+          "name": "Delete Mood Log",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/moods/{{mood_log_id}}/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "moods", "{{mood_log_id}}", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI Analysis",
+      "item": [
+        {
+          "name": "Analyze Emotion",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"I didn't sleep well last night and I'm feeling anxious about the meeting\",\n  \"persist\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/ai/analyze/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "ai", "analyze", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Music Recommendations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/music/recommend/?mood=anxious",
+              "host": ["{{base_url}}"],
+              "path": ["api", "music", "recommend", ""],
+              "query": [
+                {
+                  "key": "mood",
+                  "value": "anxious"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "List Plans",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/payments/plans/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments", "plans", ""]
+            }
+          }
+        },
+        {
+          "name": "Create Checkout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"plan_code\": \"PREMIUM_MONTHLY\",\n  \"phone\": \"0712345678\",\n  \"email\": \"test@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/payments/create_checkout/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments", "create_checkout", ""]
+            }
+          }
+        },
+        {
+          "name": "List Payments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/payments/payments/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments", "payments", ""]
+            }
+          }
+        },
+        {
+          "name": "Webhook (Test)",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"test_payment_id\",\n  \"state\": \"COMPLETE\",\n  \"api_ref\": \"payment_uuid_here\",\n  \"amount\": 499,\n  \"currency\": \"KES\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/payments/webhook/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "payments", "webhook", ""]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
